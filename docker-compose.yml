@@ -1,0 +1,129 @@
+services:
+  # ==========================================
+  # 1. PostgreSQL Relational Database Service
+  # ==========================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: linkpulse-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-linkpulse}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-linkpulse_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-linkpulse_db}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-linkpulse} -d $${POSTGRES_DB:-linkpulse_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - linkpulse-network
+
+  # ==========================================
+  # 2. Redis In-Memory Cache Service
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: linkpulse-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - linkpulse-network
+
+  # ==========================================
+  # 3. FastAPI Python Backend Service
+  # ==========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: linkpulse-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      PROJECT_NAME: ${PROJECT_NAME:-LinkPulse}
+      ENVIRONMENT: ${ENVIRONMENT:-production}
+      DEBUG: ${DEBUG:-False}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-linkpulse}:${POSTGRES_PASSWORD:-linkpulse_secret}@postgres:5432/${POSTGRES_DB:-linkpulse_db}
+      REDIS_ENABLED: "True"
+      REDIS_URL: redis://redis:6379/0
+      REDIS_CACHE_TTL_SECONDS: ${REDIS_CACHE_TTL_SECONDS:-3600}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost,http://localhost:80,http://localhost:5173,http://127.0.0.1:5173,http://127.0.0.1,http://172.24.64.1:5173}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-linkpulse-production-super-secret-jwt-key-change-in-prod-2025}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      ACCESS_TOKEN_EXPIRE_MINUTES: ${ACCESS_TOKEN_EXPIRE_MINUTES:-10080}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - linkpulse-network
+
+  # ==========================================
+  # 4. React + Vite + Nginx Frontend Service
+  # ==========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-/api}
+        VITE_BACKEND_URL: ${VITE_BACKEND_URL:-}
+    container_name: linkpulse-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:80/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - linkpulse-network
+
+# ==========================================
+# Persistent Named Storage Volumes
+# ==========================================
+volumes:
+  postgres_data:
+    name: linkpulse_postgres_data
+  redis_data:
+    name: linkpulse_redis_data
+
+# ==========================================
+# Isolated Container Bridge Network
+# ==========================================
+networks:
+  linkpulse-network:
+    name: linkpulse_network
+    driver: bridge

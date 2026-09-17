@@ -1,0 +1,23 @@
+services:
+  # LinkPulse FastAPI Backend Service on Render
+  - type: web
+    name: linkpulse-backend
+    env: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 2
+    healthCheckPath: /api/health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: REDIS_ENABLED
+        value: "False"
+      - key: CORS_ORIGINS
+        value: "https://*.vercel.app,http://localhost:5173"

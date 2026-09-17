@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" width="160" height="40" fill="none">
+  <defs>
+    <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </defs>
+  <!-- Icon Mark -->
+  <rect x="2" y="4" width="32" height="32" rx="9" fill="url(#logo-grad)"/>
+  <path d="M12 20a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v0a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <path d="M15 20h6" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+  <!-- Typography -->
+  <text x="44" y="26" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#ffffff" letter-spacing="-0.5">
+    Link<tspan fill="#22d3ee">Pulse</tspan>
+  </text>
+</svg>
