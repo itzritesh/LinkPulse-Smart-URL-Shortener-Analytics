@@ -8,14 +8,14 @@ const STEPS = [
     title: "Create",
     action: "Shorten & Brand",
     description:
-      "Paste your destination URL and optionally designate a branded domain or custom slug (e.g. pulse.to/product-drop). Set link expiration and UTM parameters.",
+      "Paste your destination URL and optionally designate a branded domain or custom slug (e.g. linkpulse.io/product-drop). Set link expiration and UTM parameters.",
     icon: Link2,
     preview: (
       <div className="p-3 rounded-xl bg-slate-900 border border-slate-800 text-left space-y-1.5 font-mono text-[11px]">
         <div className="text-slate-500">Destination:</div>
         <div className="text-slate-300 truncate">https://yourbrand.com/summer-sale?utm_source=x</div>
         <div className="pt-1 text-cyanPulse-300 font-bold flex items-center gap-1.5">
-          <span>→ pulse.to/summer-sale</span>
+          <span>→ linkpulse.io/summer-sale</span>
           <span className="px-1.5 py-0.5 rounded bg-brand-500/20 text-brand-300 text-[9px] font-sans">
             Ready
           </span>

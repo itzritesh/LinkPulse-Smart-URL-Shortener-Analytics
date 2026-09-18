@@ -10,7 +10,7 @@ const INITIAL_PINGS = [
     browser: "Chrome",
     latency: "14ms",
     timeAgo: "1s ago",
-    code: "pulse.to/launch",
+    code: "linkpulse.io/launch",
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ const INITIAL_PINGS = [
     browser: "Safari",
     latency: "22ms",
     timeAgo: "3s ago",
-    code: "pulse.to/deck-25",
+    code: "linkpulse.io/deck-25",
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ const INITIAL_PINGS = [
     browser: "Edge",
     latency: "19ms",
     timeAgo: "6s ago",
-    code: "pulse.to/promo",
+    code: "linkpulse.io/promo",
   },
   {
     id: 4,
@@ -37,7 +37,7 @@ const INITIAL_PINGS = [
     browser: "Firefox",
     latency: "16ms",
     timeAgo: "8s ago",
-    code: "pulse.to/launch",
+    code: "linkpulse.io/launch",
   },
 ];
 

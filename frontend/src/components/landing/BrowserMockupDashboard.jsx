@@ -96,7 +96,7 @@ export default function BrowserMockupDashboard() {
             {/* URL Bar */}
             <div className="flex-1 max-w-md mx-4 flex items-center justify-center gap-2 py-1.5 px-3 rounded-lg bg-slate-900 border border-slate-800 text-slate-400 font-mono text-[11px] truncate">
               <Lock className="w-3 h-3 text-emerald-400 shrink-0" />
-              <span className="truncate">https://app.linkpulse.io/analytics/pulse.to/launch-25</span>
+              <span className="truncate">https://app.linkpulse.io/analytics/linkpulse.io/launch-25</span>
             </div>
 
             {/* Browser Action Icon */}
