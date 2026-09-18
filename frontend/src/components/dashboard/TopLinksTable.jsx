@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 import CopyButton from "@/components/urls/CopyButton";
 import LinkStatusBadge from "@/components/urls/LinkStatusBadge";
-import { formatRelativeTime } from "@/utils/formatters";
+import { formatRelativeTime, getShortDomain, getShortUrl } from "@/utils/formatters";
 
 export default function TopLinksTable({
   links = [],
@@ -69,24 +69,25 @@ export default function TopLinksTable({
             <tbody className="divide-y divide-slate-800/60">
               {links.map((link, idx) => {
                 const rank = idx + 1;
-                const fullShortUrl = `${backendBaseUrl}/${link.short_code}`;
+                const shortDomain = getShortDomain();
+                const fullShortUrl = getShortUrl(link.short_code);
 
                 return (
                   <tr
                     key={link.id}
-                    className="hover:bg-slate-800/30 transition-colors group"
+                    className="hover:bg-slate-800/40 transition-colors group"
                   >
                     {/* Rank */}
-                    <td className="py-3 pr-2">
+                    <td className="py-3 pl-1 text-slate-500 font-mono text-xs">
                       <span
-                        className={`w-5 h-5 rounded flex items-center justify-center text-[11px] font-mono font-bold ${
+                        className={`inline-flex items-center justify-center w-6 h-6 rounded-lg text-xs font-bold ${
                           rank === 1
-                            ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                            ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
                             : rank === 2
-                            ? "bg-slate-400/20 text-slate-200 border border-slate-400/30"
+                            ? "bg-slate-300/20 text-slate-200 border border-slate-300/30"
                             : rank === 3
-                            ? "bg-amber-700/20 text-amber-400 border border-amber-700/30"
-                            : "text-slate-500"
+                            ? "bg-amber-700/20 text-amber-600 border border-amber-700/30"
+                            : "bg-slate-800 text-slate-400"
                         }`}
                       >
                         {rank}
@@ -97,9 +98,16 @@ export default function TopLinksTable({
                     <td className="py-3 pr-3">
                       <div className="flex flex-col">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-slate-100 hover:text-brand-300 transition-colors">
-                            pulse.to/{link.short_code}
-                          </span>
+                          <a
+                            href={fullShortUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-mono font-bold text-slate-100 hover:text-brand-300 transition-colors flex items-center gap-1.5"
+                            title="Open short URL"
+                          >
+                            <span>{shortDomain}/{link.short_code}</span>
+                            <ExternalLink className="w-3 h-3 opacity-60" />
+                          </a>
                         </div>
                         {link.title && (
                           <span className="text-[11px] text-slate-400 truncate max-w-[180px] mt-0.5">

@@ -47,7 +47,8 @@ export default function HeroSection({ onOpenPricing }) {
       const alias =
         customAlias.trim() ||
         "launch-" + Math.random().toString(36).substring(2, 6);
-      const generated = `https://pulse.to/${alias}`;
+      const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:5173";
+      const generated = `${origin}/${alias}`;
       setShortenedLink({
         original: formatted,
         short: generated,
@@ -134,7 +135,7 @@ export default function HeroSection({ onOpenPricing }) {
                   <div className="pt-2 mt-2 border-t border-slate-800/80 px-3 pb-1 flex flex-col sm:flex-row sm:items-center gap-3 animate-fade-in">
                     <span className="text-xs text-slate-400">Custom Branded Alias:</span>
                     <div className="flex items-center gap-1 text-xs font-mono">
-                      <span className="text-slate-500">pulse.to/</span>
+                      <span className="text-slate-500">{typeof window !== "undefined" ? window.location.host : "localhost:5173"}/</span>
                       <input
                         type="text"
                         value={customAlias}

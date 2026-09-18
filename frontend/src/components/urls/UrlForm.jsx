@@ -18,6 +18,7 @@ import CopyButton from "./CopyButton";
 import QrCodeModal from "@/components/landing/QrCodeModal";
 import { urlService } from "@/services/urlService";
 import { useToast } from "@/context/ToastContext";
+import { getShortDomain, getShortUrl } from "@/utils/formatters";
 
 export default function UrlForm({ onLinkCreated }) {
   const toast = useToast();
@@ -192,7 +193,7 @@ export default function UrlForm({ onLinkCreated }) {
           {/* Live slug preview */}
           {customCode && (
             <span className="text-xs font-mono text-brand-400 bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20 truncate max-w-xs">
-              pulse.to/{customCode}
+              {getShortDomain()}/{customCode}
             </span>
           )}
         </div>
@@ -208,7 +209,7 @@ export default function UrlForm({ onLinkCreated }) {
                   <span>Custom Vanity Alias</span>
                 </label>
                 <div className="flex items-center rounded-lg bg-surface-canvas border border-surface-border px-3 py-2 text-xs focus-within:border-brand-500/60">
-                  <span className="text-slate-500 font-mono">pulse.to/</span>
+                  <span className="text-slate-500 font-mono">{getShortDomain()}/</span>
                   <input
                     type="text"
                     value={customCode}
@@ -279,58 +280,61 @@ export default function UrlForm({ onLinkCreated }) {
       </form>
 
       {/* Success Animation & Generated Short Link Result Card */}
-      {createdLink && (
-        <div className="p-4 sm:p-5 rounded-xl bg-surface-canvas border border-emerald-500/30 shadow-card animate-fade-in space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="space-y-1.5 text-left min-w-0">
-              <div className="flex items-center gap-2">
-                <Badge variant="emerald" dot pulse size="sm">
-                  Active Short Link
-                </Badge>
-                <span className="text-[11px] text-slate-400 font-mono">
-                  ⚡ Redis cached lookup
-                </span>
+      {createdLink && (() => {
+        const actualShortUrl = getShortUrl(createdLink.short_code) || createdLink.short_url;
+        return (
+          <div className="p-4 sm:p-5 rounded-xl bg-surface-canvas border border-emerald-500/30 shadow-card animate-fade-in space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="space-y-1.5 text-left min-w-0">
+                <div className="flex items-center gap-2">
+                  <Badge variant="emerald" dot pulse size="sm">
+                    Active Short Link
+                  </Badge>
+                  <span className="text-[11px] text-slate-400 font-mono">
+                    ⚡ Redis cached lookup
+                  </span>
+                </div>
+                <a
+                  href={actualShortUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-base sm:text-lg font-semibold font-mono text-brand-300 hover:text-brand-200 flex items-center gap-1.5 truncate transition-colors"
+                >
+                  {actualShortUrl}
+                  <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                </a>
+                <p className="text-xs text-slate-400 truncate max-w-md">
+                  Destination: <span className="text-slate-300">{createdLink.original_url}</span>
+                </p>
               </div>
-              <a
-                href={createdLink.short_url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-base sm:text-lg font-semibold font-mono text-brand-300 hover:text-brand-200 flex items-center gap-1.5 truncate transition-colors"
-              >
-                {createdLink.short_url}
-                <ExternalLink className="w-3.5 h-3.5 text-slate-500 shrink-0" />
-              </a>
-              <p className="text-xs text-slate-400 truncate max-w-md">
-                Destination: <span className="text-slate-300">{createdLink.original_url}</span>
-              </p>
-            </div>
 
-            <div className="flex items-center gap-2 shrink-0">
-              <CopyButton
-                text={createdLink.short_url}
-                label="Copy Link"
-                variant="primary"
-                size="md"
-              />
-              <Button
-                variant="secondary"
-                size="md"
-                onClick={() => setQrModalOpen(true)}
-                title="View QR Code"
-              >
-                <QrCode className="w-4 h-4 text-brand-400" />
-              </Button>
+              <div className="flex items-center gap-2 shrink-0">
+                <CopyButton
+                  text={actualShortUrl}
+                  label="Copy Link"
+                  variant="primary"
+                  size="md"
+                />
+                <Button
+                  variant="secondary"
+                  size="md"
+                  onClick={() => setQrModalOpen(true)}
+                  title="View QR Code"
+                >
+                  <QrCode className="w-4 h-4 text-brand-400" />
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* QR Code Modal */}
       {createdLink && (
         <QrCodeModal
           isOpen={qrModalOpen}
           onClose={() => setQrModalOpen(false)}
-          shortUrl={createdLink.short_url}
+          shortUrl={getShortUrl(createdLink.short_code) || createdLink.short_url}
         />
       )}
     </div>

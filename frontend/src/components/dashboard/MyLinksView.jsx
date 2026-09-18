@@ -23,7 +23,7 @@ import {
 import CopyButton from "@/components/urls/CopyButton";
 import LinkStatusBadge from "@/components/urls/LinkStatusBadge";
 import DeleteConfirmModal from "./DeleteConfirmModal";
-import { formatDate, formatRelativeTime } from "@/utils/formatters";
+import { formatDate, formatRelativeTime, getShortDomain, getShortUrl } from "@/utils/formatters";
 
 export default function MyLinksView({
   urls = [],
@@ -274,7 +274,8 @@ export default function MyLinksView({
                 </thead>
                 <tbody className="divide-y divide-surface-border/60">
                   {paginatedUrls.map((url) => {
-                    const fullShortUrl = `${backendBaseUrl}/${url.short_code}`;
+                    const shortDomain = getShortDomain();
+                    const fullShortUrl = getShortUrl(url.short_code);
 
                     return (
                       <tr
@@ -285,9 +286,16 @@ export default function MyLinksView({
                         <td className="py-4 px-5 align-middle">
                           <div className="flex flex-col">
                             <div className="flex items-center gap-2">
-                              <span className="font-mono font-medium text-brand-300 group-hover:text-brand-200 transition-colors text-xs bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20">
-                                pulse.to/{url.short_code}
-                              </span>
+                              <a
+                                href={fullShortUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-mono font-medium text-brand-300 hover:text-brand-200 transition-colors text-xs bg-brand-500/10 hover:bg-brand-500/20 px-2 py-0.5 rounded border border-brand-500/20 flex items-center gap-1.5"
+                                title="Open short URL in new tab"
+                              >
+                                <span>{shortDomain}/{url.short_code}</span>
+                                <ExternalLink className="w-3 h-3 opacity-70" />
+                              </a>
                             </div>
                             {url.title ? (
                               <span className="text-[11px] text-slate-300 truncate max-w-[200px] mt-1.5 font-medium">
@@ -405,7 +413,8 @@ export default function MyLinksView({
           {/* 5. Mobile Responsive Card Layout (< 768px) */}
           <div className="block md:hidden space-y-3">
             {paginatedUrls.map((url) => {
-              const fullShortUrl = `${backendBaseUrl}/${url.short_code}`;
+              const shortDomain = getShortDomain();
+              const fullShortUrl = getShortUrl(url.short_code);
 
               return (
                 <div
@@ -414,9 +423,16 @@ export default function MyLinksView({
                 >
                   {/* Top Bar: Vanity Slug + Status */}
                   <div className="flex items-center justify-between gap-2">
-                    <span className="font-mono font-medium text-brand-300 text-xs bg-brand-500/10 px-2 py-0.5 rounded border border-brand-500/20 truncate">
-                      pulse.to/{url.short_code}
-                    </span>
+                    <a
+                      href={fullShortUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono font-medium text-brand-300 hover:text-brand-200 text-xs bg-brand-500/10 hover:bg-brand-500/20 px-2 py-0.5 rounded border border-brand-500/20 truncate flex items-center gap-1"
+                      title="Open short URL"
+                    >
+                      <span>{shortDomain}/{url.short_code}</span>
+                      <ExternalLink className="w-3 h-3 opacity-70 shrink-0" />
+                    </a>
                     <LinkStatusBadge
                       isActive={url.is_active}
                       isExpired={url.is_expired}

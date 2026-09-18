@@ -64,7 +64,7 @@ export default function DeleteConfirmModal({
         <div className="p-3.5 rounded-xl bg-surface-canvas border border-surface-border text-xs space-y-1">
           <div className="flex items-center justify-between">
             <span className="font-mono font-medium text-brand-300 text-sm">
-              pulse.to/{link.short_code}
+              /{link.short_code}
             </span>
             <span className="text-[11px] font-mono text-slate-400">
               {(link.clicks ?? link.click_count ?? 0).toLocaleString()} clicks

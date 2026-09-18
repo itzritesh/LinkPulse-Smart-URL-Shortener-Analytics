@@ -53,3 +53,18 @@ export function formatRelativeTime(dateString) {
     minute: "2-digit",
   }).format(date);
 }
+
+export function getShortDomain() {
+  if (typeof window !== "undefined" && window.location?.host) {
+    return window.location.host;
+  }
+  return "localhost:5173";
+}
+
+export function getShortUrl(shortCode) {
+  if (!shortCode) return "";
+  if (typeof window !== "undefined" && window.location?.origin) {
+    return `${window.location.origin}/${shortCode}`;
+  }
+  return `http://localhost:5173/${shortCode}`;
+}

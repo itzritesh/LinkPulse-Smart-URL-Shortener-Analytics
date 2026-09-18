@@ -73,8 +73,8 @@ export default function DashboardHeader({
     },
     {
       id: 2,
-      title: "Custom Domain Pulse Active",
-      desc: "pulse.to branded SSL certificate renewed across 12 edge locations.",
+      title: "Domain SSL Certificate Active",
+      desc: "Branded SSL certificate active across global edge locations.",
       time: "2h ago",
       unread: false,
     },

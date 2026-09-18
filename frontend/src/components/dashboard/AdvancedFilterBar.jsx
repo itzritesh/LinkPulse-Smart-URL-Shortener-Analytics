@@ -133,7 +133,7 @@ export default function AdvancedFilterBar({
     );
     activeBadges.push({
       key: "urlId",
-      label: `URL: pulse.to/${matchedUrl ? matchedUrl.short_code : filters.urlId}`,
+      label: `URL: /${matchedUrl ? matchedUrl.short_code : filters.urlId}`,
       onRemove: () => onRemoveFilter("urlId", ""),
     });
   }
@@ -285,7 +285,7 @@ export default function AdvancedFilterBar({
               <option value="">All Short Links</option>
               {filterOptions.urls?.map((u) => (
                 <option key={u.id} value={u.id}>
-                  pulse.to/{u.short_code} {u.title ? `(${u.title.slice(0, 16)})` : ""}
+                  /{u.short_code} {u.title ? `(${u.title.slice(0, 16)})` : ""}
                 </option>
               ))}
             </select>

@@ -53,7 +53,7 @@ import CopyButton from "@/components/urls/CopyButton";
 import LinkStatusBadge from "@/components/urls/LinkStatusBadge";
 import RecentClicksTable from "@/components/dashboard/RecentClicksTable";
 import CreateLinkModal from "@/components/dashboard/CreateLinkModal";
-import { formatDate, formatRelativeTime } from "@/utils/formatters";
+import { formatDate, formatRelativeTime, getShortDomain, getShortUrl } from "@/utils/formatters";
 
 // Distinct palette for devices and browsers
 const PALETTE = ["#6366f1", "#06b6d4", "#a855f7", "#10b981", "#f59e0b", "#f43f5e", "#64748b"];
@@ -173,7 +173,8 @@ export default function LinkAnalyticsPage() {
     }
   };
 
-  const fullShortUrl = analytics ? `${backendBaseUrl}/${analytics.short_code}` : "";
+  const fullShortUrl = analytics ? getShortUrl(analytics.short_code) : "";
+  const shortDomain = getShortDomain();
 
   // Helper date labels
   const periodLabels = {
@@ -223,7 +224,7 @@ export default function LinkAnalyticsPage() {
               </Link>
               <span className="text-slate-600">/</span>
               <span className="text-brand-300 font-mono font-medium truncate max-w-[200px]">
-                pulse.to/{analytics?.short_code || `link-${urlId}`}
+                {shortDomain}/{analytics?.short_code || `link-${urlId}`}
               </span>
             </div>
 
@@ -259,7 +260,7 @@ export default function LinkAnalyticsPage() {
                             : "text-slate-300 hover:bg-slate-800/60"
                         }`}
                       >
-                        <span className="font-mono truncate">pulse.to/{u.short_code}</span>
+                        <span className="font-mono truncate">{shortDomain}/{u.short_code}</span>
                         {String(u.id) === String(urlId) && <Check className="w-3.5 h-3.5 text-brand-400" />}
                       </button>
                     ))}
@@ -280,9 +281,16 @@ export default function LinkAnalyticsPage() {
               {/* Left Details */}
               <div className="space-y-3 max-w-2xl">
                 <div className="flex flex-wrap items-center gap-3">
-                  <span className="text-2xl sm:text-3xl font-extrabold font-mono text-white tracking-tight">
-                    pulse.to/{analytics?.short_code || "..."}
-                  </span>
+                  <a
+                    href={fullShortUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-2xl sm:text-3xl font-extrabold font-mono text-white hover:text-brand-300 tracking-tight transition-colors flex items-center gap-2"
+                    title="Open short URL in new tab"
+                  >
+                    <span>{shortDomain}/{analytics?.short_code || "..."}</span>
+                    <ExternalLink className="w-5 h-5 opacity-70" />
+                  </a>
                   {analytics && (
                     <CopyButton textToCopy={fullShortUrl} size="md" />
                   )}

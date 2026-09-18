@@ -82,7 +82,7 @@ export default function DashboardPage() {
     setSelectedUrlId(link.id);
     navigate(`/dashboard/analytics/${link.id}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
-    toast.info(`Inspecting analytics for pulse.to/${link.short_code}`);
+    toast.info(`Inspecting analytics for /${link.short_code}`);
   };
 
   // Filters
@@ -400,7 +400,7 @@ export default function DashboardPage() {
                 </h1>
                 {selectedUrlId && (
                   <span className="px-2 py-0.5 rounded-full text-[11px] font-mono font-medium bg-brand-500/20 text-brand-300 border border-brand-500/30">
-                    Filtered: pulse.to/{selectedLinkObj?.short_code}
+                    Filtered: /{selectedLinkObj?.short_code}
                   </span>
                 )}
               </div>
@@ -746,13 +746,13 @@ export default function DashboardPage() {
                       Branded Custom Domain
                     </h3>
                     <p className="text-xs text-slate-400 mb-4">
-                      Short links are currently served via the global edge network on{" "}
-                      <code className="text-brand-300 font-mono">pulse.to</code>.
+                      Short links are currently served directly via your domain{" "}
+                      <code className="text-brand-300 font-mono">{typeof window !== "undefined" ? window.location.host : "localhost"}</code>.
                     </p>
                     <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between text-xs">
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                        <span className="font-mono text-white">pulse.to</span>
+                        <span className="font-mono text-white">{typeof window !== "undefined" ? window.location.host : "localhost"}</span>
                       </div>
                       <span className="text-emerald-400 text-[11px] font-medium">
                         Active & Verified

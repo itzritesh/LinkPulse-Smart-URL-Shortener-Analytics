@@ -4,6 +4,7 @@ import { useToast } from "@/context/ToastContext";
 
 export default function CopyButton({
   text,
+  textToCopy,
   label = null,
   size = "sm",
   variant = "ghost",
@@ -12,10 +13,12 @@ export default function CopyButton({
   const [copied, setCopied] = useState(false);
   const toast = useToast();
 
+  const valueToCopy = text || textToCopy || "";
+
   const handleCopy = (e) => {
     e.stopPropagation();
-    if (!text) return;
-    navigator.clipboard.writeText(text);
+    if (!valueToCopy) return;
+    navigator.clipboard.writeText(valueToCopy);
     setCopied(true);
     toast.info("Link copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);

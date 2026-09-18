@@ -12,6 +12,7 @@ import RegisterPage from "@/pages/RegisterPage";
 import DashboardPage from "@/pages/DashboardPage";
 import LinkAnalyticsPage from "@/pages/LinkAnalyticsPage";
 import NotFoundPage from "@/pages/NotFoundPage";
+import RedirectPage from "@/pages/RedirectPage";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import PricingModal from "@/components/landing/PricingModal";
 
@@ -22,7 +23,8 @@ function AppContent() {
   const isAuthPage =
     location.pathname === "/login" || location.pathname === "/register";
   const isDashboardPage = location.pathname.startsWith("/dashboard");
-  const showPublicNav = !isAuthPage && !isDashboardPage;
+  const isRedirectPage = !isAuthPage && !isDashboardPage && location.pathname !== "/" && !location.pathname.startsWith("/not-found");
+  const showPublicNav = !isAuthPage && !isDashboardPage && !isRedirectPage;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#080b11] text-slate-100 selection:bg-brand-500/30 selection:text-brand-200">
@@ -55,6 +57,8 @@ function AppContent() {
               </ProtectedRoute>
             }
           />
+          <Route path="/r/:shortCode" element={<RedirectPage />} />
+          <Route path="/:shortCode" element={<RedirectPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
